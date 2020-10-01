@@ -30,7 +30,7 @@ func (u *Unlimited) build(values []int) {
 }
 
 func (u *Unlimited) extend(idx int) {
-	newSet := make([]byte, idx + 1)
+	newSet := make([]byte, idx+1)
 	copy(newSet, u.set)
 	u.len = len(newSet)
 	u.set = newSet
@@ -46,7 +46,7 @@ func (u *Unlimited) FindOne(val int) bool {
 }
 
 //Return true if all number from bitmap `source` present in bitmap
-func (u *Unlimited) FindAllByBitmap (source *Unlimited) bool {
+func (u *Unlimited) FindAllByBitmap(source *Unlimited) bool {
 	if source.len > u.len {
 		return false
 	}
@@ -82,4 +82,3 @@ func (u *Unlimited) findAllByBuildNewBitmap(values []int) bool {
 	newBitmap := NewUnlimited(values)
 	return u.FindAllByBitmap(newBitmap)
 }
-

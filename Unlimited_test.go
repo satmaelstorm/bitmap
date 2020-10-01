@@ -26,7 +26,7 @@ func TestUnlimited_Build(t *testing.T) {
 
 func TestUnlimited_FindOne(t *testing.T) {
 	is := assert.New(t)
-	bitmap := NewUnlimited([]int{1,3,4,8,16,20,2367423})
+	bitmap := NewUnlimited([]int{1, 3, 4, 8, 16, 20, 2367423})
 	is.True(bitmap.FindOne(1))
 	is.True(bitmap.FindOne(3))
 	is.True(bitmap.FindOne(4))
@@ -49,33 +49,33 @@ func TestUnlimited_FindOne(t *testing.T) {
 
 func TestUnlimited_findAllByBuildNewBitmap(t *testing.T) {
 	is := assert.New(t)
-	bitmap := NewUnlimited([]int{1,3,4,8,16,20,21,22,23})
-	is.True(bitmap.findAllByBuildNewBitmap([]int{1,3,4,8,16,20,21,22,23}))
-	is.True(bitmap.findAllByBuildNewBitmap([]int{20,21,22,23}))
-	is.True(bitmap.findAllByBuildNewBitmap([]int{1,3,4,8,16}))
-	is.True(bitmap.findAllByBuildNewBitmap([]int{1,16,23}))
-	is.False(bitmap.findAllByBuildNewBitmap([]int{1,16,23,32}))
-	is.False(bitmap.findAllByBuildNewBitmap([]int{1,16,23,19}))
+	bitmap := NewUnlimited([]int{1, 3, 4, 8, 16, 20, 21, 22, 23})
+	is.True(bitmap.findAllByBuildNewBitmap([]int{1, 3, 4, 8, 16, 20, 21, 22, 23}))
+	is.True(bitmap.findAllByBuildNewBitmap([]int{20, 21, 22, 23}))
+	is.True(bitmap.findAllByBuildNewBitmap([]int{1, 3, 4, 8, 16}))
+	is.True(bitmap.findAllByBuildNewBitmap([]int{1, 16, 23}))
+	is.False(bitmap.findAllByBuildNewBitmap([]int{1, 16, 23, 32}))
+	is.False(bitmap.findAllByBuildNewBitmap([]int{1, 16, 23, 19}))
 }
 
 func TestUnlimited_FindAll(t *testing.T) {
 	is := assert.New(t)
-	bitmap := NewUnlimited([]int{1,3,4,8,16,20,21,22,23})
-	is.True(bitmap.FindAll([]int{1,3,4,8,16,20,21,22,23}))
-	is.True(bitmap.FindAll([]int{20,21,22,23}))
-	is.True(bitmap.FindAll([]int{1,3,4,8,16}))
-	is.True(bitmap.FindAll([]int{1,16,23}))
-	is.False(bitmap.FindAll([]int{1,16,23,32}))
+	bitmap := NewUnlimited([]int{1, 3, 4, 8, 16, 20, 21, 22, 23})
+	is.True(bitmap.FindAll([]int{1, 3, 4, 8, 16, 20, 21, 22, 23}))
+	is.True(bitmap.FindAll([]int{20, 21, 22, 23}))
+	is.True(bitmap.FindAll([]int{1, 3, 4, 8, 16}))
+	is.True(bitmap.FindAll([]int{1, 16, 23}))
+	is.False(bitmap.FindAll([]int{1, 16, 23, 32}))
 }
 
 func TestUnlimited_FindLeastOne(t *testing.T) {
 	is := assert.New(t)
-	bitmap := NewUnlimited([]int{1,3,4,8,16,20,21,22,23})
-	is.True(bitmap.FindLeastOne([]int{1,2,5,3,4}))
-	is.True(bitmap.FindLeastOne([]int{2,5,20,0,100}))
-	is.True(bitmap.FindLeastOne([]int{100,101,23}))
-	is.True(bitmap.FindLeastOne([]int{2,5,6,7,8}))
-	is.False(bitmap.FindLeastOne([]int{2,5,6,7,9}))
+	bitmap := NewUnlimited([]int{1, 3, 4, 8, 16, 20, 21, 22, 23})
+	is.True(bitmap.FindLeastOne([]int{1, 2, 5, 3, 4}))
+	is.True(bitmap.FindLeastOne([]int{2, 5, 20, 0, 100}))
+	is.True(bitmap.FindLeastOne([]int{100, 101, 23}))
+	is.True(bitmap.FindLeastOne([]int{2, 5, 6, 7, 8}))
+	is.False(bitmap.FindLeastOne([]int{2, 5, 6, 7, 9}))
 }
 
 func BenchmarkUnlimited_findAllByBuildNewBitmap1000(b *testing.B) {

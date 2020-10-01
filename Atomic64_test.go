@@ -7,7 +7,7 @@ import (
 
 type Atomic64TestSuite struct {
 	suite.Suite
-	testCase []int
+	testCase      []int
 	wrongTestCase []int
 }
 
@@ -16,8 +16,8 @@ func TestAtomic64(t *testing.T) {
 }
 
 func (s *Atomic64TestSuite) SetupSuite() {
-	s.testCase = []int{1,2,4,8,9,10,11,12,23,25,30,31,40,50,60,63}
-	s.wrongTestCase = []int{1,2,4,8,9,10,11,12,23,25,30,31,32,64}
+	s.testCase = []int{1, 2, 4, 8, 9, 10, 11, 12, 23, 25, 30, 31, 40, 50, 60, 63}
+	s.wrongTestCase = []int{1, 2, 4, 8, 9, 10, 11, 12, 23, 25, 30, 31, 32, 64}
 }
 
 func (s *Atomic64TestSuite) TestNew() {
@@ -38,18 +38,18 @@ func (s *Atomic64TestSuite) TestFindOne() {
 func (s *Atomic64TestSuite) TestFindAll() {
 	index, err := NewAtomic64(s.testCase)
 	s.Nil(err)
-	s.True(index.FindAll([]int{1,4,8}))
+	s.True(index.FindAll([]int{1, 4, 8}))
 	s.True(index.FindAll(s.testCase))
-	s.False(index.FindAll([]int{1,4,8,0}))
+	s.False(index.FindAll([]int{1, 4, 8, 0}))
 	s.False(index.FindAll(s.wrongTestCase))
 }
 
 func (s *Atomic64TestSuite) TestFindLeastOne() {
 	index, err := NewAtomic64(s.testCase)
 	s.Nil(err)
-	s.True(index.FindLeastOne([]int{1,3,5}))
+	s.True(index.FindLeastOne([]int{1, 3, 5}))
 	s.True(index.FindLeastOne(s.wrongTestCase))
-	s.False(index.FindLeastOne([]int{3,5,7,0}))
+	s.False(index.FindLeastOne([]int{3, 5, 7, 0}))
 }
 
 func (s *Atomic64TestSuite) TestAdd() {
@@ -70,4 +70,3 @@ func (s *Atomic64TestSuite) TestDelete() {
 	index.Delete(40)
 	s.False(index.FindOne(40))
 }
-
