@@ -1,0 +1,317 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">bitmap/Atomic64.go (100.0%)</option>
+				
+				<option value="file1">bitmap/Index64.go (100.0%)</option>
+				
+				<option value="file2">bitmap/Unlimited.go (100.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package bitmap
+
+import (
+        "errors"
+        "sync"
+)
+
+type Atomic64 struct {
+        Index64
+        mu sync.RWMutex
+}
+
+func NewAtomic64(values []int) (*Atomic64, error) <span class="cov8" title="1">{
+        r := new(Atomic64)
+        err := r.build(values)
+        if nil != err </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">return r, nil</span>
+}
+
+func (a *Atomic64) FindOne(val int) bool <span class="cov8" title="1">{
+        a.mu.RLock()
+        defer a.mu.RUnlock()
+        return a.Index64.FindOne(val)
+}</span>
+
+func (a *Atomic64) FindAll(values []int) bool <span class="cov8" title="1">{
+        for _, val := range values </span><span class="cov8" title="1">{
+                if !a.FindOne(val) </span><span class="cov8" title="1">{
+                        return false
+                }</span>
+        }
+        <span class="cov8" title="1">return true</span>
+}
+
+func (a *Atomic64) FindExactOne(values []int) bool <span class="cov8" title="1">{
+        for _, val := range values </span><span class="cov8" title="1">{
+                if a.FindOne(val) </span><span class="cov8" title="1">{
+                        return true
+                }</span>
+        }
+        <span class="cov8" title="1">return false</span>
+}
+
+func (a *Atomic64) Add(val int) error <span class="cov8" title="1">{
+        if val &gt; 63 </span><span class="cov8" title="1">{
+                return errors.New("type Atomic32 can't contain values more then 63")
+        }</span>
+        <span class="cov8" title="1">bit := posFor64(val)
+        a.mu.Lock()
+        defer a.mu.Unlock()
+        a.set |= bit
+        return nil</span>
+}
+
+func (a *Atomic64) Delete(val int) <span class="cov8" title="1">{
+        if val &gt; 63 </span><span class="cov8" title="1">{
+                return
+        }</span>
+        <span class="cov8" title="1">bit := posFor64(val)
+        a.mu.Lock()
+        defer a.mu.Unlock()
+        a.set = a.set &amp;^ bit</span>
+}</pre>
+		
+		<pre class="file" id="file1" style="display: none">package bitmap
+
+import (
+        "errors"
+)
+
+type Index64 struct {
+        set uint64
+}
+
+func posFor64(val int) uint64 <span class="cov8" title="1">{
+        return 1 &lt;&lt; (val &amp; bits64mask)
+}</span>
+
+func NewIndex64(values []int) (*Index64, error) <span class="cov8" title="1">{
+        r := new(Index64)
+        err := r.build(values)
+        if nil != err </span><span class="cov8" title="1">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">return r, nil</span>
+}
+
+func (i *Index64) build(values []int) error <span class="cov8" title="1">{
+        for _, val := range values </span><span class="cov8" title="1">{
+                if val &gt; 63 </span><span class="cov8" title="1">{
+                        return errors.New("types Index64 or Atomic32 can't contain values more then 63")
+                }</span>
+                <span class="cov8" title="1">bit := posFor64(val)
+                i.set |= bit</span>
+        }
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (i *Index64) FindOne(val int) bool <span class="cov8" title="1">{
+        if val &gt; 63 </span><span class="cov8" title="1">{
+                return false
+        }</span>
+        <span class="cov8" title="1">bit := posFor64(val)
+        return i.set&amp;bit != 0</span>
+}
+
+func (i *Index64) FindAll(values []int) bool <span class="cov8" title="1">{
+        for _, val := range values </span><span class="cov8" title="1">{
+                if !i.FindOne(val) </span><span class="cov8" title="1">{
+                        return false
+                }</span>
+        }
+        <span class="cov8" title="1">return true</span>
+}
+
+func (i *Index64) FindExactOne(values []int) bool <span class="cov8" title="1">{
+        for _, val := range values </span><span class="cov8" title="1">{
+                if i.FindOne(val) </span><span class="cov8" title="1">{
+                        return true
+                }</span>
+        }
+        <span class="cov8" title="1">return false</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package bitmap
+
+
+type Unlimited struct {
+        set []byte
+        len int
+}
+
+func posForUnlimited(val int) (int, byte) <span class="cov8" title="1">{
+        return val &gt;&gt; bits8, byte(1 &lt;&lt; (val &amp; bits8mask))
+}</span>
+
+
+func NewUnlimited(values []int) *Unlimited <span class="cov8" title="1">{
+        bitmap := &amp;Unlimited{set: []byte{0}, len: 1}
+        if len(values) &gt; 0 </span><span class="cov8" title="1">{
+                bitmap.build(values)
+        }</span>
+        <span class="cov8" title="1">return bitmap</span>
+}
+
+func (u *Unlimited) build(values []int) <span class="cov8" title="1">{
+        for _, val := range values </span><span class="cov8" title="1">{
+                idx, bit := posForUnlimited(val)
+                if idx &gt;= u.len </span><span class="cov8" title="1">{
+                        u.extend(idx)
+                }</span>
+                <span class="cov8" title="1">u.set[idx] |= bit</span>
+        }
+}
+
+func (u *Unlimited) extend(idx int) <span class="cov8" title="1">{
+        newSet := make([]byte, idx + 1)
+        copy(newSet, u.set)
+</span>        //for i, v := range u.set {
+        /</span>/        newSet[i] = v
+        <span class="cov8" title="1">//}
+        u.len = len(ne</span>wSet)
+        u.set = newSet
+}
+
+func (u *Unlimited) FindOne(val int) bool {
+        idx, bit := posF</span><span class="cov8" title="1">orUnlimited(val)
+        if idx &gt;= u.len {
+                </span>return false
+        <span class="cov8" title="1">}
+</span>        return u.set[idx]&amp;bit != 0
+}
+
+func (u *Unlimited</span><span class="cov8" title="1">) FindAllByBitmap (a *Unlimited) bool {
+        if a.len &gt; u.len {
+                </span>return false
+        <span class="cov8" title="1">}
+</span>        for idx, bits := range a.set</span><span class="cov8" title="1"> {
+                if bits&amp;u.set[idx] != bits {
+                        </span>return false
+                }
+        <span class="cov8" title="1">}
+</span>        return true
+}
+
+func (u *Unlimited) FindAll(</span><span class="cov8" title="1">values []int) bool {
+        for _, val := range </span><span class="cov8" title="1">values {
+                if !u.FindOne(val) {
+                        </span>return false
+                }
+        <span class="cov8" title="1">}
+</span>        return true
+}
+
+func (u *Unlimited) FindExac</span><span class="cov8" title="1">tOne(values []int) bool {
+        for _, val := range</span><span class="cov8" title="1"> values {
+                if u.FindOne(val) {
+                        </span>return true
+                }
+        <span class="cov8" title="1">}
+</span>        return false
+}
+
+func (u *Unlimited) findAllByBuildNewBitmap(values []int) bool {
+        newBitmap := NewUnlimited(values)
+        </span>return u.FindAllByBitmap(newBitmap)
+}
+
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>
