@@ -57,6 +57,46 @@ func (s *ImmutableTestSuite) TestIndex64() {
 	s.False(idx.FindLeastOne([]int{41, 51, 62, 64}))
 }
 
+func (s *ImmutableTestSuite) TestIndex32() {
+	bm, err := NewIndex32([]int{0, 1, 3, 7, 8, 12, 15, 16, 22, 24, 31, 32})
+	s.Nil(bm)
+	s.NotNil(err)
+	bm, err = NewIndex32([]int{0, 1, 3, 7, 8, 12, 15, 16, 22, 24, 31})
+	s.Nil(err)
+	s.NotNil(bm)
+	idx := NewImmutable(bm)
+	s.True(idx.FindOne(1))
+	s.True(idx.FindOne(0))
+	s.True(idx.FindOne(31))
+	s.True(idx.FindOne(3))
+	s.True(idx.FindAll([]int{3, 7, 8, 15, 16, 31}))
+	s.True(idx.FindLeastOne([]int{2, 31, 50}))
+	s.False(idx.FindOne(4))
+	s.False(idx.FindOne(32))
+	s.False(idx.FindAll([]int{1, 3, 8, 30}))
+	s.False(idx.FindLeastOne([]int{25, 30, 20, 32}))
+}
+
+func (s *ImmutableTestSuite) TestIndex16() {
+	bm, err := NewIndex16([]int{0, 1, 3, 7, 8, 12, 15, 16})
+	s.Nil(bm)
+	s.NotNil(err)
+	bm, err = NewIndex16([]int{0, 1, 3, 7, 8, 12, 15})
+	s.Nil(err)
+	s.NotNil(bm)
+	idx := NewImmutable(bm)
+	s.True(idx.FindOne(1))
+	s.True(idx.FindOne(0))
+	s.True(idx.FindOne(15))
+	s.True(idx.FindOne(3))
+	s.True(idx.FindAll([]int{3, 7, 8, 15}))
+	s.True(idx.FindLeastOne([]int{2, 15, 50}))
+	s.False(idx.FindOne(4))
+	s.False(idx.FindOne(16))
+	s.False(idx.FindAll([]int{1, 3, 8, 16}))
+	s.False(idx.FindLeastOne([]int{2, 6, 14, 16}))
+}
+
 func (s *ImmutableTestSuite) TestIndex8() {
 	bm, err := NewIndex8([]int{0, 1, 3, 7, 8})
 	s.Nil(bm)
