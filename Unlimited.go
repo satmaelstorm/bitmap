@@ -60,6 +60,9 @@ func (u *Unlimited) FindAllByBitmap(source *Unlimited) bool {
 
 //Returns true if bitmap contains all values
 func (u *Unlimited) FindAll(values []int) bool {
+	if len(values) < 1 {
+		return false
+	}
 	for _, val := range values {
 		if !u.FindOne(val) {
 			return false

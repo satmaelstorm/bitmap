@@ -16,7 +16,7 @@ func TestAtomic64(t *testing.T) {
 }
 
 func (s *Atomic64TestSuite) SetupSuite() {
-	s.testCase = []int{1, 2, 4, 8, 9, 10, 11, 12, 23, 25, 30, 31, 40, 50, 60, 63}
+	s.testCase = []int{1, 2, 4, 8, 9, 10, 11, 12, 23, 25, 30, 31, 40, 41, 50, 60, 63}
 	s.wrongTestCase = []int{1, 2, 4, 8, 9, 10, 11, 12, 23, 25, 30, 31, 32, 64}
 }
 
@@ -69,4 +69,5 @@ func (s *Atomic64TestSuite) TestDelete() {
 	s.True(index.FindOne(40))
 	index.Delete(40)
 	s.False(index.FindOne(40))
+	s.True(index.FindOne(41))
 }
