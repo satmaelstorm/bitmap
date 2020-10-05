@@ -26,6 +26,9 @@ func NewIndex16(values []int) (*Index16, error) {
 
 func (i *Index16) build(values []int) error {
 	for _, val := range values {
+		if val < 0 {
+			return errors.New("types Index16 or Atomic16 can't contain values less then 0")
+		}
 		if val > 15 {
 			return errors.New("types Index16 or Atomic16 can't contain values more then 15")
 		}
@@ -37,6 +40,9 @@ func (i *Index16) build(values []int) error {
 
 //Return true if val contains in bitmap
 func (i *Index16) FindOne(val int) bool {
+	if val < 0 {
+		return false
+	}
 	if val > 15 {
 		return false
 	}

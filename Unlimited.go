@@ -1,5 +1,7 @@
 package bitmap
 
+import "errors"
+
 //Unlimited bitmap. Immutable. Thread-safe
 type Unlimited struct {
 	set []byte
@@ -11,22 +13,30 @@ func posForUnlimited(val int) (int, byte) {
 }
 
 //Create bew Unlimited bitmap
-func NewUnlimited(values []int) *Unlimited {
+func NewUnlimited(values []int) (*Unlimited, error) {
 	bitmap := &Unlimited{set: []byte{0}, len: 1}
 	if len(values) > 0 {
-		bitmap.build(values)
+		err := bitmap.build(values)
+		if err != nil {
+			return nil, err
+		}
 	}
-	return bitmap
+	return bitmap, nil
 }
 
-func (u *Unlimited) build(values []int) {
+func (u *Unlimited) build(values []int) error {
+
 	for _, val := range values {
+		if val < 0 {
+			return errors.New("type Unlimited can't contain values less then 0")
+		}
 		idx, bit := posForUnlimited(val)
 		if idx >= u.len {
 			u.extend(idx)
 		}
 		u.set[idx] |= bit
 	}
+	return nil
 }
 
 func (u *Unlimited) extend(idx int) {
@@ -38,6 +48,9 @@ func (u *Unlimited) extend(idx int) {
 
 //Return true if val contains in bitmap
 func (u *Unlimited) FindOne(val int) bool {
+	if val < 0 {
+		return false
+	}
 	idx, bit := posForUnlimited(val)
 	if idx >= u.len {
 		return false
@@ -82,6 +95,9 @@ func (u *Unlimited) FindLeastOne(values []int) bool {
 }
 
 func (u *Unlimited) findAllByBuildNewBitmap(values []int) bool {
-	newBitmap := NewUnlimited(values)
+	newBitmap, err := NewUnlimited(values)
+	if err != nil {
+		return false
+	}
 	return u.FindAllByBitmap(newBitmap)
 }

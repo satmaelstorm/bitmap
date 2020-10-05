@@ -26,6 +26,9 @@ func NewIndex32(values []int) (*Index32, error) {
 
 func (i *Index32) build(values []int) error {
 	for _, val := range values {
+		if val < 0 {
+			return errors.New("types Index32 or Atomic32 can't contain values less then 0")
+		}
 		if val > 31 {
 			return errors.New("types Index32 or Atomic32 can't contain values more then 31")
 		}
@@ -37,6 +40,9 @@ func (i *Index32) build(values []int) error {
 
 //Return true if val contains in bitmap
 func (i *Index32) FindOne(val int) bool {
+	if val < 0 {
+		return false
+	}
 	if val > 31 {
 		return false
 	}

@@ -26,6 +26,9 @@ func NewIndex8(values []int) (*Index8, error) {
 
 func (i *Index8) build(values []int) error {
 	for _, val := range values {
+		if val < 0 {
+			return errors.New("types Index8 or Atomic8 can't contain values less then 0")
+		}
 		if val > 7 {
 			return errors.New("types Index8 or Atomic8 can't contain values more then 7")
 		}
@@ -37,6 +40,9 @@ func (i *Index8) build(values []int) error {
 
 //Return true if val contains in bitmap
 func (i *Index8) FindOne(val int) bool {
+	if val < 0 {
+		return false
+	}
 	if val > 7 {
 		return false
 	}

@@ -26,6 +26,9 @@ func NewIndex64(values []int) (*Index64, error) {
 
 func (i *Index64) build(values []int) error {
 	for _, val := range values {
+		if val < 0 {
+			return errors.New("types Index64 or Atomic64 can't contain values less then 0")
+		}
 		if val > 63 {
 			return errors.New("types Index64 or Atomic32 can't contain values more then 63")
 		}
@@ -37,6 +40,9 @@ func (i *Index64) build(values []int) error {
 
 //Return true if val contains in bitmap
 func (i *Index64) FindOne(val int) bool {
+	if val < 0 {
+		return false
+	}
 	if val > 63 {
 		return false
 	}
