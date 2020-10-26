@@ -1,4 +1,4 @@
-module bitmap
+module github.com/satmaelstorm/bitmap
 
 go 1.14
 
