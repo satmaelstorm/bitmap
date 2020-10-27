@@ -1,6 +1,8 @@
 package bitmap
 
-import "errors"
+import (
+	"errors"
+)
 
 //Unlimited bitmap. Immutable. Thread-safe
 type Unlimited struct {
@@ -100,4 +102,18 @@ func (u *Unlimited) findAllByBuildNewBitmap(values []int) bool {
 		return false
 	}
 	return u.FindAllByBitmap(newBitmap)
+}
+
+
+func (u *Unlimited) GobEncode() ([]byte, error) {
+	return u.set, nil
+}
+
+func (u *Unlimited) GobDecode(in []byte) error {
+	u.len = len(in)
+	u.set = make([]byte, u.len)
+	for i, v := range in {
+		u.set[i] = v
+	}
+	return nil
 }

@@ -69,3 +69,16 @@ func (i *Index8) FindLeastOne(values []int) bool {
 	}
 	return false
 }
+
+
+func (i *Index8) GobEncode() ([]byte, error) {
+	return []byte{i.set}, nil
+}
+
+func (i *Index8) GobDecode(in []byte) error {
+	if len(in) != 1 {
+		return errors.New("bitmap Index8 must has 1 byte")
+	}
+	i.set = in[0]
+	return nil
+}

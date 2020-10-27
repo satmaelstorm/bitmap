@@ -69,3 +69,20 @@ func (i *Index16) FindLeastOne(values []int) bool {
 	}
 	return false
 }
+
+func (i *Index16) GobEncode() ([]byte, error) {
+	r := Int16ToBytes(int16(i.set))
+	return r[:], nil
+}
+
+func (i *Index16) GobDecode(in []byte) error {
+	if len(in) != 2 {
+		return errors.New("bitmap Index16 must has 2 bytes")
+	}
+	var r [2]byte
+	for i := 0; i < 2; i++ {
+		r[i] = in[i]
+	}
+	i.set = uint16(BytesToInt16(r))
+	return nil
+}
