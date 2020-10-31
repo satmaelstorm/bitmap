@@ -1,6 +1,7 @@
 package bitmap
 
 import (
+	"encoding/json"
 	"errors"
 )
 
@@ -115,5 +116,18 @@ func (u *Unlimited) GobDecode(in []byte) error {
 	for i, v := range in {
 		u.set[i] = v
 	}
+	return nil
+}
+
+func (u *Unlimited) MarshalJSON() ([]byte, error) {
+	return json.Marshal(u.set)
+}
+
+func (u *Unlimited) UnmarshalJSON(data []byte) error {
+	err := json.Unmarshal(data, &u.set)
+	if err != nil {
+		return &Error{Message: "Unlimited Bitmap UnmarshalJSON", Err: err}
+	}
+	u.len = len(u.set)
 	return nil
 }

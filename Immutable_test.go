@@ -3,6 +3,8 @@ package bitmap
 import (
 	"bytes"
 	"encoding/gob"
+	"encoding/json"
+	"fmt"
 	"github.com/stretchr/testify/suite"
 	"testing"
 )
@@ -15,13 +17,7 @@ func TestImmutable(t *testing.T) {
 	suite.Run(t, new(ImmutableTestSuite))
 }
 
-func (s *ImmutableTestSuite) TestUnlimited() {
-	bm, err := NewUnlimited([]int{-1})
-	s.Nil(bm)
-	s.NotNil(err)
-	idx, err := NewUnlimited([]int{1, 8, 2, 20, 128, 4444, 0, 3})
-	s.Nil(err)
-	s.NotNil(idx)
+func checkUnlimited(s *ImmutableTestSuite, idx *Unlimited) {
 	s.True(idx.FindOne(1))
 	s.True(idx.FindOne(0))
 	s.True(idx.FindOne(4444))
@@ -33,6 +29,16 @@ func (s *ImmutableTestSuite) TestUnlimited() {
 	s.False(idx.FindOne(5555555))
 	s.False(idx.FindAll([]int{0, 1, 2, 3, 4, 4444}))
 	s.False(idx.FindLeastOne([]int{5, 6, 7, 9}))
+}
+
+func (s *ImmutableTestSuite) TestUnlimited() {
+	bm, err := NewUnlimited([]int{-1})
+	s.Nil(bm)
+	s.NotNil(err)
+	idx, err := NewUnlimited([]int{1, 8, 2, 20, 128, 4444, 0, 3})
+	s.Nil(err)
+	s.NotNil(idx)
+	checkUnlimited(s, idx)
 
 	idx2, _ := NewUnlimited([]int{0})
 	s.True(idx2.FindOne(0))
@@ -44,7 +50,7 @@ func (s *ImmutableTestSuite) TestUnlimited() {
 	s.False(idx2.FindLeastOne([]int{}))
 	s.False(idx2.FindLeastOne([]int{1}))
 
-	var idx3 Unlimited
+	var idx3 *Unlimited
 	var buf bytes.Buffer
 	encoder := gob.NewEncoder(&buf)
 	err = encoder.Encode(idx)
@@ -53,17 +59,18 @@ func (s *ImmutableTestSuite) TestUnlimited() {
 	err = decoder.Decode(&idx3)
 	s.Nil(err)
 
-	s.True(idx3.FindOne(1))
-	s.True(idx3.FindOne(0))
-	s.True(idx3.FindOne(4444))
-	s.True(idx3.FindOne(3))
-	s.True(idx3.FindAll([]int{8, 4444, 2, 1}))
-	s.True(idx3.FindLeastOne([]int{3, 5, 4443, 4444}))
-	s.False(idx3.FindOne(-1))
-	s.False(idx3.FindOne(4))
-	s.False(idx3.FindOne(5555555))
-	s.False(idx3.FindAll([]int{0, 1, 2, 3, 4, 4444}))
-	s.False(idx3.FindLeastOne([]int{5, 6, 7, 9}))
+	checkUnlimited(s, idx3)
+
+	js, err := json.Marshal(idx)
+	fmt.Println(js)
+	s.Nil(err)
+	s.NotNil(js)
+
+	var idx4 *Unlimited
+	err = json.Unmarshal(js, &idx4)
+	s.Nil(err)
+
+	checkUnlimited(s, idx4)
 }
 
 func (s *ImmutableTestSuite) TestIndex64() {
