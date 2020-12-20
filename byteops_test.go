@@ -23,7 +23,7 @@ func (s TestByteOpsSuite) TestInt64ToBytes() {
 		}
 	}
 	r2 := BytesToInt64(r)
-	s.Equal(int64(^uint64(0) >> 1), r2)
+	s.Equal(int64(^uint64(0)>>1), r2)
 }
 
 func (s TestByteOpsSuite) TestInt32ToBytes() {
@@ -36,7 +36,7 @@ func (s TestByteOpsSuite) TestInt32ToBytes() {
 		}
 	}
 	r2 := BytesToInt32(r)
-	s.Equal(int32(^uint32(0) >> 1), r2)
+	s.Equal(int32(^uint32(0)>>1), r2)
 }
 
 func (s TestByteOpsSuite) TestInt16ToBytes() {
@@ -49,5 +49,5 @@ func (s TestByteOpsSuite) TestInt16ToBytes() {
 		}
 	}
 	r2 := BytesToInt16(r)
-	s.Equal(int16(^uint16(0) >> 1), r2)
+	s.Equal(int16(^uint16(0)>>1), r2)
 }

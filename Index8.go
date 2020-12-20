@@ -70,7 +70,6 @@ func (i *Index8) FindLeastOne(values []int) bool {
 	return false
 }
 
-
 func (i *Index8) GobEncode() ([]byte, error) {
 	return []byte{i.set}, nil
 }

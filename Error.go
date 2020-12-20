@@ -1,9 +1,8 @@
 package bitmap
 
-
 type Error struct {
 	Message string
-	Err error
+	Err     error
 }
 
 func (be *Error) Error() string {

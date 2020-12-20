@@ -105,7 +105,6 @@ func (u *Unlimited) findAllByBuildNewBitmap(values []int) bool {
 	return u.FindAllByBitmap(newBitmap)
 }
 
-
 func (u *Unlimited) GobEncode() ([]byte, error) {
 	return u.set, nil
 }

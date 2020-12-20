@@ -33,17 +33,17 @@ func NewSmart(values []int) *Smart {
 	result := new(Smart)
 	result.max = max
 	result.min = min
-	switch  {
+	switch {
 	case diff < 8:
 		idx, _ := NewIndex8(normalized)
 		result.index = NewImmutable(idx)
-	case diff >=9 && diff < 16:
+	case diff >= 9 && diff < 16:
 		idx, _ := NewIndex16(normalized)
 		result.index = NewImmutable(idx)
-	case diff >=16 && diff < 32:
+	case diff >= 16 && diff < 32:
 		idx, _ := NewIndex32(normalized)
 		result.index = NewImmutable(idx)
-	case diff >=32 && diff < 64:
+	case diff >= 32 && diff < 64:
 		idx, _ := NewIndex64(normalized)
 		result.index = NewImmutable(idx)
 	default:
