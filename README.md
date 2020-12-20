@@ -1,7 +1,7 @@
 # Go Simple Bitmap
 
 [![Go Report](https://goreportcard.com/badge/github.com/satmaelstorm/bitmap)](https://goreportcard.com/report/github.com/satmaelstorm/bitmap) 
-[![GoDoc](https://godoc.org/github.com/satmaelstorm/bitmap?status.svg)](http://godoc.org/github.com/satmaeltorm/bitmap)
+[![GoDoc](https://godoc.org/github.com/satmaelstorm/bitmap?status.svg)](http://godoc.org/github.com/satmaelstorm/bitmap)
 [![Coverage Status](https://coveralls.io/repos/github/satmaelstorm/bitmap/badge.svg?branch=master)](https://coveralls.io/github/satmaelstorm/bitmap?branch=master) 
 ![Go](https://github.com/satmaelstorm/bitmap/workflows/Go/badge.svg)
 
